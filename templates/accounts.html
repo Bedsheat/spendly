@@ -21,7 +21,11 @@
                 </thead>
                 <tbody>
                     {% for account in accounts %}
+                        {% if account.balance < account.minbal %}
+                        <tr class="table-danger">
+                        {% else %}
                         <tr>
+                        {% endif %}
                             <td>{{account.accno}}</td>
                             <td>{{account.bank}}</td>
                             <td>{{account.type}}</td>

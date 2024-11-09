@@ -2,8 +2,8 @@ from flask import Flask, request, render_template, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField, DateField
-from wtforms.validators import InputRequired, Length, ValidationError, Email, EqualTo
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, SelectField, DateField
+from wtforms.validators import InputRequired, Length, EqualTo
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 
@@ -101,7 +101,7 @@ class TransactionForm(FlaskForm):
 @login_required
 def index():
     transactions = TransactionsTable.query.filter_by(userid=current_user.id).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
-    total = sum([i.amount if i.type == 'income' else -i.amount for i in transactions])
+    total = sum([i.balance for i in AccountsTable.query.filter_by(userid=current_user.id).all()])
     monthly = sum([i.amount if i.type == 'income' else -i.amount for i in TransactionsTable.query.filter(
         TransactionsTable.userid == current_user.id,
         TransactionsTable.date >= datetime.now() - timedelta(days=30)
