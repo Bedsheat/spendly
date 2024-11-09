@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Current Account Balance</h5>
-                    <h2 id="totalBalance" class="card-text text-primary">$0.00</h2>
+                    <h2 id="totalBalance" class="card-text text-primary">${{"{:,}".format(total)}}</h2>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Monthly Earnings</h5>
-                    <h2 id="monthlyEarnings" class="card-text text-success">$0.00</h2>
+                    <h2 id="monthlyEarnings" class="card-text text-success">${{"{:,}".format(monthly)}}</h2>
                 </div>
             </div>
         </div>
@@ -27,9 +27,40 @@
             <h5 class="card-title mb-0">Recent Transactions</h5>
         </div>
         <div class="card-body">
-            <ul id="recentExpenses" class="list-group list-group-flush">
-                <!-- Recent expenses will be added here -->
-            </ul>
+            {% if transactions %}
+            <table id="transactionsTable" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Transaction ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Account Number</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    {% if transaction.type == 'income' %}
+                        <tr class="table-success">
+                    {% else %}
+                        <tr class="table-danger">
+                    {% endif %}
+                            <td>{{transaction.tno}}</td>
+                            <td>{{transaction.date}}</td>
+                            <td>{{transaction.accno}}</td>
+                            <td>{{transaction.type}}</td>
+                            <td>{{"{:,}".format(transaction.amount)}}</td>
+                            <td>{{transaction.category}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info" role="info">
+                <i class="fas fa-exclamation-circle"></i> &nbsp; No transactions yet.
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

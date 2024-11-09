@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField, DateField
 from wtforms.validators import InputRequired, Length, ValidationError, Email, EqualTo
 from flask_bcrypt import Bcrypt
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spendly.db'
@@ -100,8 +100,13 @@ class TransactionForm(FlaskForm):
 @app.route("/", methods = ["GET", "POST"])
 @login_required
 def index():
-    print(current_user.id)
-    return render_template("index.html")
+    transactions = TransactionsTable.query.filter_by(userid=current_user.id).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
+    total = sum([i.amount if i.type == 'income' else -i.amount for i in transactions])
+    monthly = sum([i.amount if i.type == 'income' else -i.amount for i in TransactionsTable.query.filter(
+        TransactionsTable.userid == current_user.id,
+        TransactionsTable.date >= datetime.now() - timedelta(days=30)
+    ).all()])
+    return render_template("index.html", transactions=transactions[:8], total=total, monthly=monthly)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
