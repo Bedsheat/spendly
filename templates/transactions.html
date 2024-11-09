@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Transactions</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Add New Transaction</h5>
+            <form id="addTransactionForm" class="row g-3" method="POST">
+                {{ form.hidden_tag() }}
+                <div class="col-md-6">
+                    <label for="transactionAccount" class="form-label">Account *</label>
+                    {{ form.account_number(class="form-select", id="transactionAccount") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="transactionAmount" class="form-label">Amount *</label>
+                    {{ form.amount(class="form-control", id="transactionAmount") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="transactionType" class="form-label">Type *</label>
+                    {{ form.type(class="form-select", id="transactionType") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="transactionDate" class="form-label">Date *</label>
+                    {{ form.date(class="form-control", id="transactionDate") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="transactionCategory" class="form-label">Category</label>
+                    {{ form.category(class="form-control", id="transactionCategory") }}
+                </div>
+                <div class="col-12">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">All Transactions</h5>
+        </div>
+        <div class="card-body">
+            {% if transactions %}
+            <table id="transactionsTable" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Transaction ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Account Number</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    {% if transaction.type == 'income' %}
+                        <tr class="table-success">
+                    {% else %}
+                        <tr class="table-danger">
+                    {% endif %}
+                            <td>{{transaction.tno}}</td>
+                            <td>{{transaction.date}}</td>
+                            <td>{{transaction.accno}}</td>
+                            <td>{{transaction.type}}</td>
+                            <td>{{transaction.amount}}</td>
+                            <td>{{transaction.category}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info" role="info">
+                <i class="fas fa-exclamation-circle"></i> &nbsp; No transactions yet.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

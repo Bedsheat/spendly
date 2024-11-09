@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Accounts</h1>
+
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #c2c6c6;">
+            <h5 class="card-title mb-0">Your Accounts</h5>
+        </div>
+        <div class="card-body">
+            {% if accounts %}
+            <table id="accountsTable" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Account Number</th>
+                        <th scope="col">Bank Name</th>
+                        <th scope="col">Account Type</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col">Minimum Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                        <tr>
+                            <td>{{account.accno}}</td>
+                            <td>{{account.bank}}</td>
+                            <td>{{account.type}}</td>
+                            <td>{{account.balance}}</td>
+                            <td>{{account.minbal}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info" role="info">
+                <i class="fas fa-exclamation-circle"></i> &nbsp; No accounts created yet.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Add New Account</h5>
+            <form id="addAccountForm" class="row g-3", method="POST">
+                {{ form.hidden_tag() }}
+                <div class="col-md-6">
+                    <label for="newAccountNumber" class="form-label">Account Number *</label>
+                    {{ form.account_number(class="form-control", id="newAccountNumber") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="newBankName" class="form-label">Bank Name *</label>
+                    {{ form.bank(class="form-control", id="newBankName") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="newAccountType" class="form-label">Account Type *</label>
+                    {{ form.type(class="form-select", id="newAccountType") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="newAccountBalance" class="form-label">Initial Balance *</label>
+                    {{ form.balance(class="form-control", id="newAccountBalance") }}
+                </div>
+                <div class="col-md-6">
+                    <label for="newMinimumBalance" class="form-label">Minimum Balance</label>
+                    {{ form.minimum_balance(class="form-control", id="newMinimumBalance") }}
+                </div>
+                <div class="col-12">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
