@@ -25,7 +25,7 @@
                             <td>{{account.accno}}</td>
                             <td>{{account.bank}}</td>
                             <td>{{account.type}}</td>
-                            <td>{{account.balance}}</td>
+                            <td>{{"{:,}".format(account.balance)}}</td>
                             <td>{{account.minbal}}</td>
                         </tr>
                     {% endfor %}

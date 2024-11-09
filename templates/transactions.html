@@ -64,7 +64,7 @@
                             <td>{{transaction.date}}</td>
                             <td>{{transaction.accno}}</td>
                             <td>{{transaction.type}}</td>
-                            <td>{{transaction.amount}}</td>
+                            <td>{{"{:,}".format(transaction.amount)}}</td>
                             <td>{{transaction.category}}</td>
                         </tr>
                     {% endfor %}
