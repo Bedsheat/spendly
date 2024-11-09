@@ -169,6 +169,9 @@ def transactions():
     form = TransactionForm()
     if form.is_submitted():
         acc = AccountsTable.query.get(form.account_number.data)
+        if form.date.data > datetime.today().date():
+            flash("Date can't be of after current date.", "danger")
+            return redirect(url_for("transactions"))
         if form.type.data == 'expense':
             if form.amount.data > AccountsTable.query.filter_by(accno=form.account_number.data).first().balance:
                 flash("Insufficient balance in that account.", "danger")
@@ -190,7 +193,8 @@ def transactions():
         db.session.commit()
         flash("Transaction successfull.", "success")
         return redirect(url_for("transactions"))
-    transactions = TransactionsTable.query.filter_by(userid=current_user.id).all()
+    transactions = TransactionsTable.query.filter_by(userid=current_user.id).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
+    
     form.account_number.choices = [('', "Choose Account")] + [(i.accno, f"{i.accno} - {i.bank}") for i in AccountsTable.query.filter_by(userid=current_user.id).all()]
     return render_template('transactions.html', form=form, transactions=transactions)
 
