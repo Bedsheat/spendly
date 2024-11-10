@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Account Details</h1>
+
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #c2c6c6;">
+            <h5 class="card-title mb-0">Account Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                     <p><strong>Account Number:</strong> {{ account.accno }}</p> 
+                    <p><strong>Bank Name:</strong> {{ account.bank }}</p>
+                    <p><strong>Account Type:</strong> {{ account.type }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Balance:</strong> {{ "{:,}".format(account.balance) }}</p>
+                    <p><strong>Minimum Balance:</strong> {{ account.minbal }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #c2c6c6;">
+            <h5 class="card-title mb-0">Recent Transactions</h5>
+        </div>
+        <div class="card-body">
+            {% if transactions %}
+            <table id="transactionsTable" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Transaction ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Account Number</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    {% if transaction.type == 'income' %}
+                        <tr class="table-success">
+                    {% else %}
+                        <tr class="table-danger">
+                    {% endif %}
+                            <td>{{transaction.tno}}</td>
+                            <td>{{transaction.date}}</td>
+                            <td>{{transaction.accno}}</td>
+                            <td>{{transaction.type}}</td>
+                            <td>{{"{:,}".format(transaction.amount)}}</td>
+                            <td>{{transaction.category}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info" role="info">
+                <i class="fas fa-exclamation-circle"></i> &nbsp; No transactions yet.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete Account</a>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this account? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('delete', accno=account.accno) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
