@@ -4,7 +4,7 @@
     <h1 class="mb-4 text-center">Accounts</h1>
 
     <div class="card mb-4">
-        <div class="card-header" style="background-color: #c2c6c6;">
+        <div class="card-header">
             <h5 class="card-title mb-0">Your Accounts</h5>
         </div>
         <div class="card-body">
@@ -26,7 +26,7 @@
                         {% else %}
                         <tr>
                         {% endif %}
-                            <td>{{account.accno}}</td>
+                            <td><a href="/accountpage/{{account.accno}}">{{account.accno}}</a></td>
                             <td>{{account.bank}}</td>
                             <td>{{account.type}}</td>
                             <td>{{"{:,}".format(account.balance)}}</td>

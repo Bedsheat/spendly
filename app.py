@@ -168,6 +168,30 @@ def accounts():
     accounts = AccountsTable.query.filter_by(userid=current_user.id).all()
     return render_template('accounts.html', form=form, accounts=accounts)
 
+@app.route('/accountpage/<int:accno>', methods = ["GET", "POST"])
+@login_required
+def accountpage(accno):
+    acc = AccountsTable.query.get(accno)
+    if acc.userid == current_user.id:
+        transactions = TransactionsTable.query.filter_by(accno=accno).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
+        return render_template("accountpage.html", account=acc, transactions=transactions)
+    else:
+        flash("You dont own this account.", "danger")
+        return redirect("/")
+    
+@app.route('/delete/<int:accno>', methods = ["GET", "POST"])
+@login_required
+def delete(accno):
+    acc = AccountsTable.query.get(accno)
+    if acc.userid == current_user.id:
+        db.session.delete(acc)
+        db.session.commit()
+        flash("Account deleted successfully.", "success")
+        return redirect(url_for('accounts'))
+    else:
+        flash("You dont own this account.", "danger")
+        return redirect("/")
+
 @app.route('/transactions', methods = ["GET", "POST"])
 @login_required
 def transactions():
