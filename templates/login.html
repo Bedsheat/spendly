@@ -10,10 +10,9 @@
     <style>
         body {
             background-color: #f8f9fa;
+            min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            flex-direction: column;
         }
 
         .card {
@@ -36,11 +35,21 @@
         .form-control:focus + .input-group-text {
             border-color: #ced4da;
         }
+
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1050;
+            width: 90%;
+            max-width: 500px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <div class="alert-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -51,8 +60,10 @@
             {% endfor %}
         {% endif %}
         {% endwith %}
-        
-        <div class="row justify-content-center">
+    </div>
+    
+    <div class="container flex-grow-1 d-flex align-items-center justify-content-center">
+        <div class="row justify-content-center w-100">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body p-5">

@@ -102,11 +102,15 @@ class TransactionForm(FlaskForm):
 def index():
     transactions = TransactionsTable.query.filter_by(userid=current_user.id).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
     total = sum([i.balance for i in AccountsTable.query.filter_by(userid=current_user.id).all()])
-    monthly = sum([i.amount if i.type == 'income' else -i.amount for i in TransactionsTable.query.filter(
+    monthly_income = sum([i.amount if i.type == 'income' else 0 for i in TransactionsTable.query.filter(
         TransactionsTable.userid == current_user.id,
         TransactionsTable.date >= datetime.now() - timedelta(days=30)
     ).all()])
-    return render_template("index.html", transactions=transactions[:8], total=total, monthly=monthly, title='Dashboard')
+    monthly_expenditure = sum([i.amount if i.type == 'expense' else 0 for i in TransactionsTable.query.filter(
+        TransactionsTable.userid == current_user.id,
+        TransactionsTable.date >= datetime.now() - timedelta(days=30)
+    ).all()])
+    return render_template("index.html", transactions=transactions[:8], total=total, monthly_earnings=monthly_income, monthly_expenditure=monthly_expenditure, title='Dashboard')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

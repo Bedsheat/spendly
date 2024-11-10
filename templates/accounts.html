@@ -26,11 +26,11 @@
                         {% else %}
                         <tr>
                         {% endif %}
-                            <td><a href="/accountpage/{{account.accno}}">{{account.accno}}</a></td>
+                            <td><a href="/accountpage/{{account.accno}}" id="link">{{account.accno}}</a></td>
                             <td>{{account.bank}}</td>
                             <td>{{account.type}}</td>
                             <td>{{"{:,}".format(account.balance)}}</td>
-                            <td>{{account.minbal}}</td>
+                            <td>{{"{:,}".format(account.minbal)}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -1,3 +1,34 @@
 option:first {
     color: #cbc2c2;
 }
+
+body[data-bs-theme="light"] #link:link,
+body[data-bs-theme="light"] #link:visited {
+  color: #bb0f7f;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+body[data-bs-theme="light"] #link:hover {
+  color: #57073b;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+body[data-bs-theme="dark"] #link:link,
+body[data-bs-theme="dark"] #link:visited {
+  color: #DCAE96;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+body[data-bs-theme="dark"] #link:hover {
+  color: #de926a;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+/* Optional: Darken the background of the entire table */
+body[data-bs-theme="dark"] .table {
+    background-color: #212529;
+}
