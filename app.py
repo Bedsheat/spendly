@@ -106,7 +106,7 @@ def index():
         TransactionsTable.userid == current_user.id,
         TransactionsTable.date >= datetime.now() - timedelta(days=30)
     ).all()])
-    return render_template("index.html", transactions=transactions[:8], total=total, monthly=monthly)
+    return render_template("index.html", transactions=transactions[:8], total=total, monthly=monthly, title='Dashboard')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -137,7 +137,7 @@ def login():
             return redirect(url_for('index'))
         else:
             flash('Invalid username or password', 'danger')
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, title='Login')
 
 @app.route('/logout')
 def logout():
@@ -166,7 +166,7 @@ def accounts():
             return redirect(url_for('accounts'))
         
     accounts = AccountsTable.query.filter_by(userid=current_user.id).all()
-    return render_template('accounts.html', form=form, accounts=accounts)
+    return render_template('accounts.html', form=form, accounts=accounts, title='Accounts')
 
 @app.route('/accountpage/<int:accno>', methods = ["GET", "POST"])
 @login_required
@@ -174,7 +174,7 @@ def accountpage(accno):
     acc = AccountsTable.query.get(accno)
     if acc.userid == current_user.id:
         transactions = TransactionsTable.query.filter_by(accno=accno).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
-        return render_template("accountpage.html", account=acc, transactions=transactions)
+        return render_template("accountpage.html", account=acc, transactions=transactions, title='Account')
     else:
         flash("You dont own this account.", "danger")
         return redirect("/")
@@ -225,7 +225,7 @@ def transactions():
     transactions = TransactionsTable.query.filter_by(userid=current_user.id).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
     
     form.account_number.choices = [('', "Choose Account")] + [(i.accno, f"{i.accno} - {i.bank}") for i in AccountsTable.query.filter_by(userid=current_user.id).all()]
-    return render_template('transactions.html', form=form, transactions=transactions)
+    return render_template('transactions.html', form=form, transactions=transactions, title="Transactions")
 
 
 
