@@ -56,9 +56,9 @@
                 <tbody>
                     {% for transaction in transactions %}
                     {% if transaction.type == 'income' %}
-                        <tr class="table-success">
+                        <tr class="table-success text-success">
                     {% else %}
-                        <tr class="table-danger">
+                        <tr class="table-danger text-danger">
                     {% endif %}
                             <td>{{transaction.tno}}</td>
                             <td>{{transaction.date}}</td>
