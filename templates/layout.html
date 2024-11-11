@@ -34,10 +34,9 @@
                     <li class="nav-item">
                         <button class="btn btn-link nav-link" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
                     </li>
-                    <!-- Dark Mode Toggle Button -->
                     <li class="nav-item">
                         <button class="btn btn-outline-secondary" id="darkModeToggle">
-                            <i class="bi bi-moon"></i> <!-- Moon icon for dark mode -->
+                            <i class="bi bi-moon"></i>
                         </button>
                     </li>
                 </ul>
@@ -98,13 +97,10 @@
         });
 
     
-
-        // Call the function when the theme changes
         darkModeToggle.addEventListener('click', () => {
-            setTimeout(updateTableColors, 0); // Use setTimeout to ensure the theme has been applied
+            setTimeout(updateTableColors, 0); 
         });
 
-        // Call the function on page load
         document.addEventListener('DOMContentLoaded', updateTableColors);
     </script>
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">

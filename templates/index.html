@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Total Account Balance</h5>
-                    <h2 id="totalBalance" class="card-text text-primary">${{"{:,}".format(total)}}</h2>
+                    <h2 id="totalBalance" class="card-text text-primary">₹{{"{:,}".format(total)}}</h2>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Monthly Earnings</h5>
-                    <h2 id="monthlyEarnings" class="card-text text-success">${{"{:,}".format(monthly_earnings)}}</h2>
+                    <h2 id="monthlyEarnings" class="card-text text-success">₹{{"{:,}".format(monthly_earnings)}}</h2>
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Monthly Expenditure</h5>
-                    <h2 id="monthlyExpenditure" class="card-text text-danger">${{"{:,}".format(monthly_expenditure)}}</h2>
+                    <h2 id="monthlyExpenditure" class="card-text text-danger">₹{{"{:,}".format(monthly_expenditure)}}</h2>
                 </div>
             </div>
         </div>
