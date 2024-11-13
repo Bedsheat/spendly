@@ -131,7 +131,8 @@ def index():
         TransactionsTable.userid == current_user.id,
         TransactionsTable.date >= datetime.now() - timedelta(days=30)
     ).all()])
-    return render_template("index.html", transactions=transactions[:8], total=total, monthly_earnings=monthly_income, monthly_expenditure=monthly_expenditure, title='Dashboard')
+
+    return render_template("index.html", recent=transactions[:8], total=total, monthly_earnings=monthly_income, monthly_expenditure=monthly_expenditure, title='Dashboard', transactions=transactions)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for transaction in transactions %}
+                    {% for transaction in recent %}
                     {% if transaction.type == 'income' %}
                         <tr class="table-success">
                     {% else %}
