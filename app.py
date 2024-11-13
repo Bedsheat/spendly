@@ -88,11 +88,24 @@ class AccountForm(FlaskForm):
     submit = SubmitField('Add Account')
 
 class TransactionForm(FlaskForm):
+    categories = [
+        ("", "Select Category"),
+        ("Rent", "Rent"),
+        ("Salary", "Salary"),
+        ("Utilities", "Utilities"),
+        ("Transportation", "Transportation"),
+        ("Food", "Food"),
+        ("Health & Insurance", "Health & Insurance"),
+        ("Entertainment", "Entertainment"),
+        ("Savings & Investments", "Savings & Investments"),
+        ("Debt Repayment", "Debt Repayment"),
+        ("Miscellaneous", "Miscellaneous")
+    ]
     account_number = SelectField("Account Number", validators=[InputRequired()])
     amount = IntegerField('Amount', validators=[InputRequired()])
     type = SelectField('Type', choices=[('', "Select Type"), ('expense', "Expenditure"), ('income', "Income")],validators=[InputRequired()])
     date = DateField('Date', default=datetime.today(), validators=[InputRequired()])
-    category = StringField('Category')
+    category = SelectField('Category', choices=categories)
     submit = SubmitField('Add Transaction')
 
 # Routes ----------------------------------------------------------------------------------------------------------------------

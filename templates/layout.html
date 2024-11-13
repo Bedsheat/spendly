@@ -14,7 +14,7 @@
 </head>
 <body id="body" data-bs-theme="light">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" id="navbar">
+    <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light shadow-sm fixed-top" id="navbar">
         <div class="container">
             <a class="navbar-brand" href="/">Spendly</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@
             </div>
         </div>
     </nav>
-
+    <br><br>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
