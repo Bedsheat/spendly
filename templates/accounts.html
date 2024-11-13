@@ -26,11 +26,11 @@
                         {% else %}
                         <tr>
                         {% endif %}
-                            <td><a href="/accountpage/{{account.accno}}" id="link">{{account.accno}}</a></td>
+                            <td><a href="/accountpage/{{account.accno}}">{{account.accno}}</a></td>
                             <td>{{account.bank}}</td>
                             <td>{{account.type}}</td>
                             <td>{{"{:,}".format(account.balance)}}</td>
-                            <td>{{"{:,}".format(account.minbal)}}</td>
+                            <td>{{account.minbal}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -40,6 +40,20 @@
                 <i class="fas fa-exclamation-circle"></i> &nbsp; No accounts created yet.
             </div>
             {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Cash Balance</h5>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="mb-0">₹{{"{:,}".format(cash)}}</h2>
+                    <p class="text-muted mb-0">Available Cash</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -75,4 +89,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

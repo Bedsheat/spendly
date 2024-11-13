@@ -66,6 +66,14 @@ class UsersTable(db.Model, UserMixin):
     username = db.Column(db.String, nullable = False, unique = True)
     password = db.Column(db.Integer, nullable = False)
 
+class CashTable(db.Model, UserMixin):
+    def __init__(self, uid, bal=0):
+        self.userid = uid
+        self.balance = bal
+    __tablename__ = 'cash'
+    uid = db.Column(db.Integer, primary_key = True)
+    balance = db.Column(db.Integer, nullable = False)
+
 # Forms -----------------------------------------------------------------------------------------------------------------------
 
 class RegistrationForm(FlaskForm):
@@ -114,7 +122,7 @@ class TransactionForm(FlaskForm):
 @login_required
 def index():
     transactions = TransactionsTable.query.filter_by(userid=current_user.id).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
-    total = sum([i.balance for i in AccountsTable.query.filter_by(userid=current_user.id).all()])
+    total = sum([i.balance for i in AccountsTable.query.filter_by(userid=current_user.id).all()]) + CashTable.query.get(current_user.id).balance
     monthly_income = sum([i.amount if i.type == 'income' else 0 for i in TransactionsTable.query.filter(
         TransactionsTable.userid == current_user.id,
         TransactionsTable.date >= datetime.now() - timedelta(days=30)
@@ -135,7 +143,9 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = UsersTable(form.username.data, hashed_password)
+        cash = CashTable(form.username.data)
         db.session.add(user)
+        db.session.add(cash)
         db.session.commit()
         flash('Registration successful!', 'success')
         return redirect(url_for('login'))
@@ -183,7 +193,8 @@ def accounts():
             return redirect(url_for('accounts'))
         
     accounts = AccountsTable.query.filter_by(userid=current_user.id).all()
-    return render_template('accounts.html', form=form, accounts=accounts, title='Accounts')
+    cash = CashTable.query.get(current_user.id).balance
+    return render_template('accounts.html', form=form, accounts=accounts, cash=cash, title='Accounts')
 
 @app.route('/accountpage/<int:accno>', methods = ["GET", "POST"])
 @login_required
@@ -214,18 +225,29 @@ def delete(accno):
 def transactions():
     form = TransactionForm()
     if form.is_submitted():
-        acc = AccountsTable.query.get(form.account_number.data)
         if form.date.data > datetime.today().date():
             flash("Date can't be of after current date.", "danger")
             return redirect(url_for("transactions"))
-        if form.type.data == 'expense':
-            if form.amount.data > AccountsTable.query.filter_by(accno=form.account_number.data).first().balance:
-                flash("Insufficient balance in that account.", "danger")
-                return redirect(url_for("transactions"))
-            else:
-                acc.balance -= form.amount.data
-        elif form.type.data == 'income':
-            acc.balance += form.amount.data
+        if form.account_number.data == 'cash':
+            cash = CashTable.query.get(current_user.id)
+            if form.type.data == 'expense':
+                if form.amount.data > cash.balance:
+                    flash("Insufficient cash balance.", "danger")
+                    return redirect(url_for("transactions"))
+                else:
+                    cash.balance -= form.amount.data
+            elif form.type.data == 'income':
+                cash.balance += form.amount.data
+        else: 
+            acc = AccountsTable.query.get(form.account_number.data)
+            if form.type.data == 'expense':
+                if form.amount.data > acc.balance:
+                    flash("Insufficient balance in that account.", "danger")
+                    return redirect(url_for("transactions"))
+                else:
+                    acc.balance -= form.amount.data
+            elif form.type.data == 'income':
+                acc.balance += form.amount.data
 
         transaction = TransactionsTable(
             uid = current_user.id,
@@ -241,7 +263,7 @@ def transactions():
         return redirect(url_for("transactions"))
     transactions = TransactionsTable.query.filter_by(userid=current_user.id).order_by(TransactionsTable.date.desc(), TransactionsTable.tno.desc()).all()
     
-    form.account_number.choices = [('', "Choose Account")] + [(i.accno, f"{i.accno} - {i.bank}") for i in AccountsTable.query.filter_by(userid=current_user.id).all()]
+    form.account_number.choices = [('', "Choose Account"), ('cash', "Cash")] + [(i.accno, f"{i.accno} - {i.bank}") for i in AccountsTable.query.filter_by(userid=current_user.id).all()]
     return render_template('transactions.html', form=form, transactions=transactions, title="Transactions")
 
 
